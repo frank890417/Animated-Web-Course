@@ -1,11 +1,13 @@
 <?php
-	// ini_set('display_errors', 1);
-	// ini_set('display_startup_errors', 1);
-	// error_reporting(E_ALL);
+	ini_set('display_errors', 1);
+  ini_set('display_startup_errors', 1);
+  error_reporting(E_ALL);
+
 	
 	header("Content-Type:text/html; charset=utf-8");
   header('Access-Control-Allow-Origin: *');  
   	// mb_internal_encoding('UTF-8');
+
 
   //determine args
   $type="json";
@@ -14,14 +16,13 @@
     $type=$_GET["type"];  
   
   $urls=$_GET["urls"];
-  $alldata=array();
+  $alldata=[];
 
   $cachetxt=file_get_contents("data/codepen_cache.txt");
-  $cache=json_decode($cachetxt);
-
+  $cache=(array)json_decode($cachetxt);
   // print_r($cache);
 
-  //parsing all url in urls
+  // parsing all url in urls
   for($i=0;$i<count($urls);$i++){
     $now_url=$urls[$i] ;
     $re = '/pen\/([a-zA-Z]*)/';
@@ -31,20 +32,22 @@
     $key_url=$matches[1][0];
     // Print the entire match result
     // print_r($matches);
+    // echo array_key_exists ($key_url,$cache);
 
-    // print_r($cache->$key_url);
-
-    if (is_null ($cache->$key_url)){
+    if (!array_key_exists ($key_url,$cache)){
        // echo "parse!!! ".$key_url."<br>";
        $parse_data=parsePen($now_url);
-       // echo $parse_data;
-       $cache->$key_url=$parse_data;
+       $cache[$key_url] = $parse_data;
+
+       array_push($alldata,$parse_data);
     }else{
+      // echo "not null..";
       // print_r($cache->$key_url);
       // echo $cache->$key_url;
+      array_push($alldata,$cache[$key_url]);
     }
 
-    array_push($alldata,$cache->$key_url);
+    
 
   }
   file_put_contents("data/codepen_cache.txt", json_encode($cache));
@@ -56,6 +59,7 @@
   }else if ($type=="printr"){
       print_r($alldata);
   }
+  // echo "end";
 
   //get pen data
   function parsePen($url){
@@ -67,12 +71,13 @@
     preg_match_all($re, $alltext, $matches);
 
 
-    $data=array();
+    $data=[];
     $data["url"]=$url;
+    $data["time"]= date('Y-m-d H:i:s');
     // print_r($matches);
-    for($i=0;$i<count($matches[1]);$i++){
-      $dataname=str_replace(":","_",$matches[1][$i]);
-      $data[$dataname]=$matches[2][$i];
+    for($o=0;$o<count($matches[1]);$o++){
+      $dataname=str_replace(":","_",$matches[1][$o]);
+      $data[$dataname]=$matches[2][$o];
     }
     return $data;
   }
