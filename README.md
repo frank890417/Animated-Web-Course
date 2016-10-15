@@ -5,6 +5,7 @@
 #### 抓取codepen預覽圖資料
 提供抓取codepen的og img/標題文字，
 傳入get引數 Array[url...] 回網站的og資訊，並自動暫存曾經解析過的瀏覽網址加速API載入速度。
+[Codepen Demo](http://codepen.io/frank890417/pen/XjBrok) 
 ```
 var api_url="http://www.monoame.com/awi_class/api/parse_codepen.php";
 var urllist=[
