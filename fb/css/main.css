@@ -3,6 +3,9 @@
   font-family: 微軟正黑體;
   vertical-align: top;
 }
+h1,h2,h3,h4,h5,h6{
+  font-weight: bold !important;
+}
 .fbpost,.projpost{
   border: solid 1px #eee;
  
@@ -36,7 +39,7 @@
   border-bottom: solid 1px #eee ;
 }
 .projpost p{
-  
+  word-break: break-all
   margin-top: 10px;
  
 }
@@ -118,4 +121,8 @@ ul li.active{
 .chatbox_msg{
   margin-top: 5px;
   border-bottom: solid 1px #ccc;
+}
+h3 label{
+  font-size: 0.6em !important;
+  vertical-align: middle;
 }

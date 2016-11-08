@@ -1,3 +1,14 @@
+//初始化ga
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-52977512-11', 'auto');
+ga('send', 'pageview' , '/');
+
+
 //初始化fb
 window.fbAsyncInit = function() {
   FB.init({
@@ -82,13 +93,25 @@ Vue.component("fieldswitch",{
               <li @click='sw(\"proj1\")' :class='[page==\"proj1\"?\"active\":\"\"]'>Project.1 名片 ({{pjnum[0]}}件)</li>\
               <li @click='sw(\"proj2\")' :class='[page==\"proj2\"?\"active\":\"\"]'>Project.2 視覺規範 ({{pjnum[1]}}件)</li>\
               <li @click='sw(\"proj3\")' :class='[page==\"proj3\"?\"active\":\"\"]'>Project.3 天氣盒子 ({{pjnum[2]}}件)</li>\
-              <li onclick=\"window.open('https://hahow.in/cr/monoame-webdesign1')\"> 前往課程頁面</li>\
-              <li onclick=\"window.open('https://www.facebook.com/groups/600360513469667/')\"> 前往FB社團</li>\
-              <li onclick=\"window.open('https://www.facebook.com/groups/600360513469667/permalink/632282303610821/')\"> 新增作品方式</li>\
+              <li @click='sw(\"to_hahow_course_page\")' > 前往課程頁面</li>\
+              <li @click='sw(\"to_fb_club_page\")' > 前往FB社團</li>\
+              <li @click='sw(\"to_explain_hand_page\")' > 新增作品方式</li>\
               <br><chatpanel :messages='messages'/><br>\
             </ul></div>",
   methods:{
     sw: function(p){
+      ga('send', 'pageview', "/"+p);
+      console.log("ga log: "+"/"+p);
+      if(p=="to_hahow_course_page"){
+        window.open('https://hahow.in/cr/monoame-webdesign1');
+        return 0;
+      }else if(p=="to_fb_club_page"){
+        window.open('https://www.facebook.com/groups/600360513469667/');
+        return 0;
+      }else if(p=="to_explain_hand_page"){
+        window.open('https://www.facebook.com/groups/600360513469667/permalink/632282303610821/');
+        return 0;
+      }
       vm.page=p;
     }
   },
@@ -109,12 +132,16 @@ Vue.component("fbpost",{
 })
 //fb貼文總覽的群組組件(下層是fbpost)
 Vue.component("fbpostpanel",{
-  template: "<div class='col-sm-9'><fbpost v-for='p in posts' :post='p'></fbpost></div>",
+  template: "<div class='col-sm-9'> \
+                <div class='col-sm-12'><h3>FB社團po文節錄(調整中)</h3><hr></div>\
+                <fbpost class='col-sm-12' v-for='p in posts' :post='p'> \
+                </fbpost> \
+            </div>",
   props: ["posts"]
 });
 //每一個專案的組件(上層是projpanel)
 Vue.component("proj_post",{
-  template: "<div>\
+  template: "<div v-show='filter_show'>\
                 <div class=\"projpost\">\
                   <a :href='penurl' target='_blank' title='點擊前往作品codepen'><img :src='imgurl'></a>\
                   <div class=content_area>\
@@ -123,7 +150,7 @@ Vue.component("proj_post",{
                   </div>\
                 </div>\
              </div>",
-  props: ["post"],
+  props: ["post","filter","d_size"],
   data: {
     expand: function(){return false;}
   },
@@ -166,25 +193,38 @@ Vue.component("proj_post",{
       }else{
         return "";
       }
+    },
+    filter_show: function(){
+      var result=(this.post.message.indexOf(this.filter)!=-1 || this.post.from.name.indexOf(this.filter)!=-1);
+      return result;
     }
   }
 });
 //專案總覽的群組組件(下層proj_post)
 Vue.component("projpanel",{
   template: "<div> \
-              <h3 v-show='!posts.length'>載入資料中...</h3>\
-              <h3>共有{{posts.length}}項作品 \
-               <a v-bind:href=\"'https://www.facebook.com/'+proj_fb_hash\" target='_blank'>(繳交貼文網址)</a> \
-               <input class='finder_input' placeholder='輸入過濾名字/內文' v-model='filter'>\
-              </h3> \
-              <div v-show=\"filter==''\" class='col-sm-4'>\
-                <proj_post v-for='p in cut_post[0]' :post='p' v-if=\"p.message.indexOf(\'http\')>=0\" /> \
+              <div class='col-sm-12'>\
+                <h3 v-show='!posts.length'>載入資料中...</h3>\
+                <h3>{{filter==''?('共有'+posts.length+'項作品'):('共有'+filtered_post.length+'項作品搜尋結果')}} \
+                 <a v-bind:href=\"'https://www.facebook.com/'+proj_fb_hash\" target='_blank'>(繳交貼文網址)</a> \
+                 <input class='finder_input' placeholder='輸入過濾名字/內文' v-model='filter'>\
+                 &nbsp;&nbsp;&nbsp;&nbsp;\
+                 <label>小呈現\
+                    <input class='input_size' type='radio' value='small' v-model='d_size'></input>\
+                 </label>\
+                 <label>大呈現\
+                    <input class='input_size' type='radio' value='big' v-model='d_size'></input>\
+                 </label>\
+                </h3> \
               </div>\
-              <div v-show=\"filter==''\" class='col-sm-4'>\
-                <proj_post v-for='p in cut_post[1]' :post='p' v-if=\"p.message.indexOf(\'http\')>=0\" /> \
+              <div v-show=\"filter==''\" :class=\"[d_size=='small'?'col-sm-4':'col-sm-6']\">\
+                <proj_post v-for='p in cut_post[0]' :d_size='d_size' :post='p' :filter='filter' v-if=\"p.message.indexOf(\'http\')>=0\" /> \
               </div>\
-              <div v-show=\"filter==''\" class='col-sm-4'>\
-                <proj_post v-for='p in cut_post[2]' :post='p' v-if=\"p.message.indexOf(\'http\')>=0\" /> \
+              <div v-show=\"filter==''\" :class=\"[d_size=='small'?'col-sm-4':'col-sm-6']\">\
+                <proj_post v-for='p in cut_post[1]' :d_size='d_size' :post='p' :filter='filter' v-if=\"p.message.indexOf(\'http\')>=0\" /> \
+              </div>\
+              <div v-show=\"filter==''\" :class=\"[d_size=='small'?'col-sm-4':'col-sm-6']\">\
+                <proj_post v-for='p in cut_post[2]' :d_size='d_size' :post='p' :filter='filter' v-if=\"p.message.indexOf(\'http\')>=0\" /> \
               </div>\
               <proj_post v-show=\"filter!=''\" class='col-sm-4' v-for='p in filtered_post' :post='p' v-if=\"p.message.indexOf(\'http\')>=0\" /> \
               \
@@ -193,7 +233,8 @@ Vue.component("projpanel",{
   data:function(){
     return {
       filter: "",
-      display_num: 25
+      display_num: 25,
+      d_size: "small"
     }
   },
   computed:{
@@ -238,7 +279,7 @@ function send(name,mes){
 }
 //聊天訊息總覽的組件
 Vue.component("chatpanel",{
-  template: "<div><br><h4>Firebase即時留言板</h4> \
+  template: "<div><br><h4>Firebase即時留言板(最新10則)</h4> \
               <hr>\
                 <div class='chatbox_msg' v-for=\"m in messages \"><span class=chatbox_name>{{m.name}}</span>: {{m.message}}\
                   <span class='smalltime'>{{m.time}} </span>\
@@ -311,7 +352,7 @@ database = firebase.database();
 
 //將message物件與firevase掛勾
 function init(){
-  database.ref('messages').on('value',function(snapshot) {
+  database.ref('messages').limitToLast(10).on('value',function(snapshot) {
      // console.log(snapshot);
      Vue.set(vm,"messages",snapshot.val());
   });
