@@ -1,0 +1,121 @@
+*{
+  color: #333;
+  font-family: 微軟正黑體;
+  vertical-align: top;
+}
+.fbpost,.projpost{
+  border: solid 1px #eee;
+ 
+  
+}
+.fbpost{
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.projpost{
+  vertical-align: top;
+  /*height: 320px;*/
+  border-radius: 5px;
+  width: 100%;
+  margin: 5px;
+  margin-bottom: 15px;
+  transition: 0.5s;
+}
+.projpost:hover{
+  background-color: #eee;
+  
+}
+.projpost .content_area {
+  padding: 8px;
+}
+.projpost img{
+  
+  width: 100%;
+  border-radius: 5px 5px 0px 0px;
+  border-bottom: solid 1px #eee ;
+}
+.projpost p{
+  
+  margin-top: 10px;
+ 
+}
+.proj_bounded{
+  height: 320px;
+
+}
+.proj_bounded:hover{
+  height: auto;
+  
+}
+.col-sm-4{
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-bottom: 10px;
+}
+
+h6{
+  opacity: 0.5;
+}
+.container-fluid{
+  max-width: 1400px;
+}
+.fieldswitch{
+  /*position: fixed;*/
+}
+ul{
+  margin: 0;
+  box-sizing: border-box;
+  /*padding: 40px;*/
+}
+ul li{
+  display: block;
+  border-bottom: solid 1px #aaa;
+  padding: 5px 10px;    
+  cursor: pointer;
+  transition-duration: 0.5s;
+}
+ul li.active{
+  background-color: #333;
+  color: white;
+}
+.jumbotron{
+  /*background: url('https://hahow.in/images/574fab4f206cd60900c52a67');*/
+  /*background-position: center center;*/
+  /*background-size: auto 100%;*/
+  /*background-repeat: no-repeat;*/
+  /*background-color: #f5bc19;*/
+  /*padding: 10px;*/
+  /*color: white;*/
+
+  padding: 10px;
+  background-color: transparent !important;
+}
+.jumbotron h2{
+  font-weight: bold;
+}
+.finder_input{
+  border: none;
+  border: solid 1px #aaa;
+  font-size: 0.5em;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.smalltime{
+  margin-left: 10px;
+  font-size: 8px;
+  color: #bbb;
+  vertical-align: bottom;
+}
+.input_name{
+  width: 70px;
+}
+.chatbox_name{
+  background-color: #ccc;
+  padding: 3px 5px;
+  border-radius: 5px;
+}
+.chatbox_msg{
+  margin-top: 5px;
+  border-bottom: solid 1px #ccc;
+}
