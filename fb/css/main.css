@@ -43,6 +43,9 @@ h1,h2,h3,h4,h5,h6{
   margin-top: 10px;
  
 }
+.projpost a.time{
+  color: #aaa;
+}
 .proj_bounded{
   height: 320px;
 
@@ -125,4 +128,10 @@ ul li.active{
 h3 label{
   font-size: 0.6em !important;
   vertical-align: middle;
+}
+.fbshare_btn{
+  background-color: #3b5998;
+  color: white;
+  border: none;
+  padding: 5px 10px;
 }

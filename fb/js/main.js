@@ -96,6 +96,9 @@ Vue.component("fieldswitch",{
               <li @click='sw(\"to_hahow_course_page\")' > 前往課程頁面</li>\
               <li @click='sw(\"to_fb_club_page\")' > 前往FB社團</li>\
               <li @click='sw(\"to_explain_hand_page\")' > 新增作品方式</li>\
+              <br>\
+              <button class='fbshare_btn' @click='sw(\"share_course\")' >（๑ • ‿ • ๑ ）分享課程</button>\
+              <br>\
               <br><chatpanel :messages='messages'/><br>\
             </ul></div>",
   methods:{
@@ -110,6 +113,20 @@ Vue.component("fieldswitch",{
         return 0;
       }else if(p=="to_explain_hand_page"){
         window.open('https://www.facebook.com/groups/600360513469667/permalink/632282303610821/');
+        return 0;
+      }else if(p=="share_course"){
+        FB.ui({
+          method: 'share',
+          href: 'https://hahow.in/cr/monoame-webdesign1'
+        }, function(response){
+          if (response && !response.error_message) {
+            console.log("ga log: "+"/course_shared");
+            ga('send', 'pageview', "/course_shared");
+          } else {
+            console.log("ga log: "+"/course_cancal_share");
+            ga('send', 'pageview', "/course_cancal_share");
+          }
+        });
         return 0;
       }
       vm.page=p;
@@ -146,7 +163,7 @@ Vue.component("proj_post",{
                   <a :href='penurl' target='_blank' title='點擊前往作品codepen'><img :src='imgurl'></a>\
                   <div class=content_area>\
                     <p v-html='para'></p>\
-                    <h6>{{post.created_time}}</h6>\
+                    <h6><a class='time' :href='comment_url' target='_blank'>{{post.created_time}}</a></h6>\
                   </div>\
                 </div>\
              </div>",
@@ -155,8 +172,10 @@ Vue.component("proj_post",{
     expand: function(){return false;}
   },
   computed: {
-
-    para: function(){
+    comment_url: function(){
+      return "https://www.facebook.com/"+this.post.id;
+    }
+    ,para: function(){
       return "<a href=\"https://www.facebook.com/"+this.post.from.id+"\" target='_blank'> ["+this.post.from.name+"]</a>: "+this.post.message.replace(/(?:\r\n|\r|\n)/g, "<br>");
     },
     ap: function(){

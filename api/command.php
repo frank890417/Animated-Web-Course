@@ -19,6 +19,7 @@
       $get_name_list["notifydata"]="data/notifydata.txt";
       $get_name_list["tododata"]="data/tododata.txt";
       $get_name_list["hahowdata"]="data/hahowdata.txt";
+      $get_name_list["bkldata"]="data/bkldata.txt";
       
       if($type=="get"){
         foreach ($get_name_list as $key => $value) 
